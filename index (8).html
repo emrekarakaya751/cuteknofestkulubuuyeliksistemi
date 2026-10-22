@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B57D0">
+<title>TEKNOFEST KULÜBÜ ÜYELİK SİSTEMİ</title>
+<meta name="description" content="Çukurova Üniversitesi Teknofest Kulübü üyelik kaydı">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<style>
+:root{
+  --ink:#0A1F44; --blue:#0B57D0; --blue-d:#08409c; --red:#E0262F; --red-d:#b81c24;
+  --mist:#EEF4FF; --line:#C9D9F5; --flame:#FF9F1C;
+  --ease:cubic-bezier(.5,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px;line-height:1.45;color:var(--ink);
+  background:linear-gradient(180deg,#fff 0,var(--mist) 340px) no-repeat,var(--mist);
+  min-height:100vh;min-height:100dvh;
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+body::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--red) 0 50%,var(--blue) 50% 100%)}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px 32px}
+
+/* Üst alan */
+.hero{text-align:center;padding-top:10px}
+.logo{display:block;margin:0 auto;width:min(48vw,190px);height:auto;aspect-ratio:1;mix-blend-mode:multiply;animation:float 5s ease-in-out infinite}
+h1{font-weight:900;font-style:italic;letter-spacing:-.01em;line-height:1.08;font-size:clamp(1.55rem,7.4vw,2.1rem);margin-top:-6px}
+h1 small{display:block;font-size:.62em;font-weight:800;letter-spacing:.06em;margin-top:6px}
+
+/* Roket ilerleme çizgisi */
+.track{position:relative;height:112px;margin:14px 34px 4px;--p:0}
+.rail,.fill{position:absolute;left:0;top:52px;height:6px;border-radius:6px}
+.rail{right:0;background:var(--line)}
+.fill{width:calc(var(--p)*100%);background:linear-gradient(90deg,var(--red),var(--blue));transition:width .85s var(--ease)}
+.rocket{position:absolute;top:0;left:calc(var(--p)*100%);width:46px;height:46px;margin-left:-23px;transition:left .85s var(--ease)}
+.rocket svg{width:100%;height:100%;transform:rotate(90deg);overflow:visible}
+.flame{transform-origin:12px 17px;animation:flick .22s ease-in-out infinite alternate}
+.rocket.boost .flame{animation-duration:.12s;transform:scale(1.5)}
+.stop{position:absolute;top:44px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#fff;border:4px solid var(--line);transition:border-color .4s,background .4s}
+.stop.on{border-color:var(--blue)}
+.stop.cur{background:var(--red);border-color:var(--red)}
+.stop span{position:absolute;top:26px;left:50%;transform:translateX(-50%);font-size:.82rem;font-weight:800;white-space:nowrap}
+
+/* Kartlar */
+.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:20px 18px;box-shadow:0 14px 30px -18px rgba(11,87,208,.45)}
+.card[hidden]{display:none}
+.card.in{animation:swap .28s ease-out}
+h2{font-size:1.28rem;line-height:1.2;font-weight:900;outline:none}
+.lead{margin-top:6px;color:#34476b}
+
+.price{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.price b{font-size:2.5rem;line-height:1;font-weight:900;color:var(--red);white-space:nowrap}
+
+.ibanbox{margin:16px 0 10px;padding:14px 10px;text-align:center;background:var(--mist);border:2px dashed var(--blue);border-radius:14px}
+.ibanbox .lbl{font-size:.85rem;font-weight:700;color:#34476b;margin-bottom:4px}
+.iban{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 10px;font-weight:900;font-size:clamp(1.05rem,5.2vw,1.3rem);letter-spacing:.03em;font-variant-numeric:tabular-nums}
+.recipient{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 4px}
+.recipient p{font-size:.95rem}
+.recipient strong{display:block}
+
+.tips{list-style:none;margin:14px 0 18px;display:grid;gap:10px}
+.tips li{position:relative;padding-left:22px}
+.tips li::before{content:"";position:absolute;left:2px;top:.5em;width:10px;height:10px;border-radius:50%;background:var(--red)}
+.tips em{font-style:normal;font-weight:800;background:#FFF1C9;padding:1px 6px;border-radius:6px;display:inline-block}
+
+/* Butonlar */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;padding:0 16px;border:0;border-radius:14px;
+  font-weight:800;font-size:1.08rem;line-height:1.1;font-family:inherit;color:#fff;text-decoration:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;transition:transform .12s,background .2s,opacity .2s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.65;cursor:wait}
+.btn.red{background:var(--red)} .btn.red:active{background:var(--red-d)}
+.btn.blue{background:var(--blue)} .btn.blue:active{background:var(--blue-d)}
+.btn.sm{width:auto;min-height:46px;padding:0 14px;font-size:.95rem;white-space:nowrap}
+.btn.done{background:#13804b}
+.btn.ghost{background:transparent;color:var(--blue);min-height:46px;font-weight:700;margin-top:6px}
+.btn.wa{background:#1FA855}
+.btn.ig{background:linear-gradient(45deg,#F9A03F,#E0262F 45%,#B5179E)}
+.btn svg{width:26px;height:26px;flex:none}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+/* Form */
+form{margin-top:14px;display:grid;gap:14px}
+label{display:block;font-weight:800;font-size:.95rem;margin-bottom:5px}
+.field{width:100%;height:54px;padding:0 14px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);
+  font-weight:600;font-size:1.06rem;font-family:inherit;-webkit-appearance:none;appearance:none}
+.field:focus{border-color:var(--blue);outline:3px solid rgba(11,87,208,.22)}
+.field[aria-invalid="true"]{border-color:var(--red)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.msg{min-height:1.4em;font-weight:700;color:var(--red-d)}
+.note{font-size:.85rem;color:#34476b;text-align:center}
+
+/* Başarı */
+.check{display:block;width:84px;height:84px;margin:2px auto 10px}
+.check circle{fill:none;stroke:var(--blue);stroke-width:5;stroke-dasharray:252;stroke-dashoffset:252;animation:draw .7s var(--ease) forwards}
+.check path{fill:none;stroke:var(--red);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .5s .55s var(--ease) forwards}
+.center{text-align:center}
+.links{display:grid;gap:12px;margin:18px 0 12px}
+
+.foot{margin-top:18px;text-align:center;font-size:.82rem;color:#4a5d80}
+
+/* Konfeti */
+.cf{position:fixed;top:-16px;width:9px;height:15px;z-index:50;pointer-events:none;animation:fall linear forwards}
+
+@keyframes float{50%{transform:translateY(-6px)}}
+@keyframes flick{from{transform:scaleY(.7)}to{transform:scaleY(1.25)}}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fall{to{transform:translate3d(var(--dx),108vh,0) rotate(720deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .logo{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <img class="logo" src="logo.jpg" width="190" height="190" alt="Çukurova Üniversitesi Teknofest Kulübü logosu" fetchpriority="high">
+    <h1>TEKNOFEST KULÜBÜ <small>ÜYELİK SİSTEMİ</small></h1>
+  </header>
+
+  <!-- Roket ilerleme çizgisi -->
+  <div class="track" id="track" aria-label="Üyelik adımları">
+    <div class="rail"></div><div class="fill"></div>
+    <div class="stop on cur" style="left:0"><span>Ödeme</span></div>
+    <div class="stop" style="left:50%"><span>Bilgiler</span></div>
+    <div class="stop" style="left:100%"><span>Katıl</span></div>
+    <div class="rocket" id="rocket" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="flame" d="M10 17h4l-2 6z" fill="#FF9F1C"/>
+        <path d="M7.5 12.5 4.5 16.5V19l3-1.6z" fill="#E0262F"/>
+        <path d="M16.5 12.5l3 4V19l-3-1.6z" fill="#E0262F"/>
+        <path d="M12 1.5c3 2.5 4.6 6 4.6 10V17H7.4v-5.5c0-4 1.6-7.5 4.6-10z" fill="#0B57D0"/>
+        <circle cx="12" cy="9" r="1.9" fill="#fff"/>
+      </svg>
+    </div>
+  </div>
+
+  <main>
+    <!-- 1. AŞAMA: ÖDEME -->
+    <section class="card" data-step="1" aria-labelledby="h1a">
+      <div class="price">
+        <div>
+          <h2 id="h1a" tabindex="-1">Önce üyelik ücretini öde</h2>
+          <p class="lead">Mobil bankandan havale yap.</p>
+        </div>
+        <b>10 TL</b>
+      </div>
+
+      <div class="ibanbox">
+        <div class="lbl">IBAN</div>
+        <div class="iban" aria-label="TR70 0001 0016 9098 3344 9550 01">
+          <span>TR70</span><span>0001</span><span>0016</span><span>9098</span><span>3344</span><span>9550</span><span>01</span>
+        </div>
+      </div>
+      <button type="button" class="btn blue" id="copyIban">IBAN'ı kopyala</button>
+
+      <div class="recipient" style="margin-top:14px">
+        <p><span style="color:#34476b">Alıcı hesap adı</span><strong>Çukurova Üniversitesi Teknofest Kulübü</strong></p>
+        <button type="button" class="btn blue sm" id="copyName">Adı kopyala</button>
+      </div>
+
+      <ul class="tips">
+        <li>Tutar: <strong>10 TL</strong></li>
+        <li>Açıklama kısmına <strong>Ad Soyad</strong> ve <strong>Öğrenci Numaranı</strong> yaz.<br>Örnek: <em>Ayşe Yılmaz 2024123456</em></li>
+        <li>Açıklamayı eksiksiz yaz. Ödemen buna göre eşleştirilir.</li>
+      </ul>
+
+      <button type="button" class="btn red" id="paid">Ödemeyi yaptım, devam et</button>
+    </section>
+
+    <!-- 2. AŞAMA: BİLGİLER -->
+    <section class="card" data-step="2" aria-labelledby="h2a" hidden>
+      <h2 id="h2a" tabindex="-1">Bilgilerini yaz</h2>
+      <p class="lead">Beş alanı doldur, kaydın hemen alınır.</p>
+
+      <form id="form" novalidate autocomplete="on">
+        <div><label for="ad">Ad</label>
+          <input class="field" id="ad" name="ad" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" required></div>
+        <div><label for="soyad">Soyad</label>
+          <input class="field" id="soyad" name="soyad" type="text" autocomplete="family-name" autocapitalize="words" enterkeyhint="next" required></div>
+        <div><label for="bolum">Bölüm</label>
+          <input class="field" id="bolum" name="bolum" type="text" autocomplete="off" autocapitalize="words" enterkeyhint="next" required></div>
+        <div><label for="no">Öğrenci numarası</label>
+          <input class="field" id="no" name="no" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="next" required></div>
+        <div><label for="tel">Telefon numarası</label>
+          <input class="field" id="tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx" enterkeyhint="done" required></div>
+        <input class="hp" id="web" name="web" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="msg" id="msg" role="alert" aria-live="assertive"></p>
+        <button type="submit" class="btn red" id="send">Kaydı tamamla</button>
+        <p class="note">Bilgilerin yalnızca kulüp üyelik kaydı için kullanılır.</p>
+      </form>
+      <button type="button" class="btn ghost" id="back">Ödeme bilgilerine dön</button>
+    </section>
+
+    <!-- 3. AŞAMA: KATIL -->
+    <section class="card center" data-step="3" aria-labelledby="h3a" hidden>
+      <svg class="check" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40"/><path d="M32 52l13 13 24-28"/></svg>
+      <h2 id="h3a" tabindex="-1">Kaydın alındı, <span id="who">hoş geldin</span>!</h2>
+      <p class="lead">Son adım: gruba katıl ve hesabımızı takip et.</p>
+
+      <div class="links">
+        <a class="btn wa" href="https://chat.whatsapp.com/Kz16pA9m6S86py9G3Cin75" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path transform="translate(6.6 6.6) scale(.45)" stroke-width="3.4" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          WhatsApp grubuna gir
+        </a>
+        <a class="btn ig" href="https://www.instagram.com/cuteknofest_kulubu?utm_source=qr&amp;obrf=MXIxa3dxODh4dmI0Mg==" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r=".8" fill="#fff"/></svg>
+          Instagram'da takip et
+        </a>
+      </div>
+      <p class="note">Üyeliğin, ödemen kontrol edildikten sonra kesinleşir.</p>
+      <button type="button" class="btn ghost" id="again">Yeni kayıt başlat</button>
+    </section>
+  </main>
+
+  <p class="foot">Çukurova Üniversitesi Teknofest Kulübü</p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var CFG = {
+    API_URL: 'BURAYA_APPS_SCRIPT_URL',
+    IBAN: 'TR700001001690983344955001',
+    HESAP: 'Çukurova Üniversitesi Teknofest Kulübü'
+  };
+  var $ = function(s){return document.querySelector(s)};
+  var cards = document.querySelectorAll('.card');
+  var stops = document.querySelectorAll('.stop');
+  var track = $('#track'), rocket = $('#rocket'), msg = $('#msg');
+  var POS = {1:0, 2:.5, 3:1};
+
+  var store = {
+    get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},
+    set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},
+    del:function(k){try{localStorage.removeItem(k)}catch(e){}}
+  };
+
+  /* Adım geçişi */
+  function go(n, silent){
+    cards.forEach(function(c){
+      var on = Number(c.dataset.step) === n;
+      c.hidden = !on;
+      c.classList.remove('in');
+      if(on && !silent){ void c.offsetWidth; c.classList.add('in'); }
+    });
+    track.style.setProperty('--p', POS[n]);
+    stops.forEach(function(s,i){ s.classList.toggle('on', i+1 <= n); s.classList.toggle('cur', i+1 === n); });
+    rocket.classList.toggle('boost', n === 3);
+    if(n !== 3) store.set('tk_step', String(n));
+    if(!silent){
+      window.scrollTo({top:0, behavior:'smooth'});
+      var h = document.querySelector('.card[data-step="'+n+'"] h2');
+      if(h) h.focus({preventScroll:true});
+    }
+  }
+
+  /* Kopyala */
+  function copy(text, btn, okText){
+    var old = btn.textContent;
+    function ok(){
+      btn.textContent = okText; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1800);
+    }
+    function fallback(){
+      var t = document.createElement('textarea');
+      t.value = text; t.setAttribute('readonly',''); t.style.cssText = 'position:fixed;top:0;opacity:0';
+      document.body.appendChild(t); t.select(); t.setSelectionRange(0, text.length);
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(t); ok();
+    }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(ok, fallback);
+    } else { fallback(); }
+  }
+  $('#copyIban').addEventListener('click', function(){ copy(CFG.IBAN, this, 'Kopyalandı ✓'); });
+  $('#copyName').addEventListener('click', function(){ copy(CFG.HESAP, this, 'Kopyalandı ✓'); });
+  $('#paid').addEventListener('click', function(){ go(2); });
+  $('#back').addEventListener('click', function(){ go(1); });
+
+  /* Form kalıcılığı (banka uygulamasından dönünce kaybolmasın) */
+  var fields = ['ad','soyad','bolum','no','tel'];
+  function saveForm(){
+    var o = {}; fields.forEach(function(f){ o[f] = $('#'+f).value; });
+    store.set('tk_form', JSON.stringify(o));
+  }
+  function loadForm(){
+    try{
+      var o = JSON.parse(store.get('tk_form') || '{}');
+      fields.forEach(function(f){ if(o[f]) $('#'+f).value = o[f]; });
+    }catch(e){}
+  }
+  fields.forEach(function(f){
+    $('#'+f).addEventListener('input', function(){ this.removeAttribute('aria-invalid'); msg.textContent=''; saveForm(); });
+  });
+
+  /* Doğrulama */
+  function digits(s){ return String(s).replace(/\D/g,''); }
+  function bad(id, text){
+    var el = $('#'+id); el.setAttribute('aria-invalid','true'); el.focus();
+    msg.textContent = text; return false;
+  }
+  function check(){
+    fields.forEach(function(f){ $('#'+f).removeAttribute('aria-invalid'); });
+    if($('#ad').value.trim().length < 2) return bad('ad','Adını yaz.');
+    if($('#soyad').value.trim().length < 2) return bad('soyad','Soyadını yaz.');
+    if($('#bolum').value.trim().length < 2) return bad('bolum','Bölümünü yaz.');
+    var no = digits($('#no').value);
+    if(no.length < 5 || no.length > 15) return bad('no','Öğrenci numaranı rakamlarla yaz.');
+    var tel = digits($('#tel').value);
+    if(tel.length === 10 && tel.charAt(0) === '5') tel = '0' + tel;
+    if(tel.length !== 11) return bad('tel','Telefon numaranı 11 haneli yaz. Örnek: 05xx xxx xx xx');
+    return {
+      ad: $('#ad').value.trim(), soyad: $('#soyad').value.trim(), bolum: $('#bolum').value.trim(),
+      no: no, tel: tel, web: $('#web').value
+    };
+  }
+
+  /* Gönder */
+  $('#form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = check(); if(!data) return;
+    var btn = $('#send'); btn.disabled = true; btn.textContent = 'Kaydediliyor...'; msg.textContent = '';
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function(){ if(ctl) ctl.abort(); }, 30000);
+
+    fetch(CFG.API_URL, {method:'POST', body: JSON.stringify(data), signal: ctl ? ctl.signal : undefined})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        clearTimeout(timer);
+        if(j && j.ok){ success(data.ad); }
+        else { fail((j && j.msg) || 'Kayıt alınamadı. Tekrar dene.'); }
+      })
+      .catch(function(){
+        clearTimeout(timer);
+        fail('Bağlantı kurulamadı. İnterneti kontrol edip tekrar dene.');
+      });
+
+    function fail(t){ btn.disabled = false; btn.textContent = 'Kaydı tamamla'; msg.textContent = t; }
+  });
+
+  function success(ad){
+    store.set('tk_done', '1'); store.set('tk_ad', ad); store.del('tk_form'); store.del('tk_step');
+    $('#who').textContent = ad;
+    $('#send').disabled = false; $('#send').textContent = 'Kaydı tamamla';
+    go(3); confetti();
+  }
+
+  /* Yeni kayıt (ortak telefon/tablet için) */
+  $('#again').addEventListener('click', function(){
+    store.del('tk_done'); store.del('tk_ad'); store.del('tk_form'); store.del('tk_step');
+    fields.forEach(function(f){ $('#'+f).value = ''; });
+    go(1);
+  });
+
+  /* Konfeti */
+  function confetti(){
+    if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var colors = ['#0B57D0','#E0262F','#FF9F1C','#ffffff','#0A1F44'], frag = document.createDocumentFragment(), els = [];
+    for(var i=0;i<30;i++){
+      var s = document.createElement('i'); s.className = 'cf';
+      s.style.left = (Math.random()*100)+'vw';
+      s.style.background = colors[i % colors.length];
+      s.style.boxShadow = '0 0 0 1px rgba(10,31,68,.15)';
+      s.style.setProperty('--dx', (Math.random()*160-80)+'px');
+      s.style.animationDuration = (1.6 + Math.random()*1.4)+'s';
+      s.style.animationDelay = (Math.random()*.4)+'s';
+      frag.appendChild(s); els.push(s);
+    }
+    document.body.appendChild(frag);
+    setTimeout(function(){ els.forEach(function(el){ el.remove(); }); }, 3800);
+  }
+
+  /* Açılış */
+  loadForm();
+  if(store.get('tk_done') === '1'){
+    $('#who').textContent = store.get('tk_ad') || 'hoş geldin';
+    go(3, true);
+  } else {
+    go(store.get('tk_step') === '2' ? 2 : 1, true);
+  }
+})();
+</script>
+</body>
+</html>
